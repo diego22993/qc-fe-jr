@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@layer base {
+  input[type="date"],
+  input[type="tel"],
+  select,
+  textarea {
+    background: var(--color-bg-secondary);
+    border: 0.5px solid var(--color-border-primary);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--color-text-main);
+    font-size: 13px;
+    outline: none;
+    box-sizing: border-box;
+  }
+}
