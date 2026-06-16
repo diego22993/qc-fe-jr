@@ -1,9 +1,21 @@
 // api/empleados.api.ts
 // DIP: abstracción de todas las llamadas HTTP de empleados.
 
-import type { Empleado, EmpleadoFormData } from "../features/empleados/types/empleado.types";
+import type {
+  Empleado,
+  EmpleadoFormData,
+} from "../features/empleados/types/empleado.types";
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000/api";
+
+// Lee el token del localStorage (misma key que auth.store.ts)
+const getAuthHeaders = (): HeadersInit => {
+  const token = localStorage.getItem("auth_token");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
 
 const handleResponse = async <T>(res: Response): Promise<T> => {
   if (!res.ok) {
@@ -16,13 +28,17 @@ const handleResponse = async <T>(res: Response): Promise<T> => {
 };
 
 export const getEmpleados = async (): Promise<Empleado[]> => {
-  const res = await fetch(`${BASE_URL}/empleados`);
+  const res = await fetch(`${BASE_URL}/empleados`, {
+    headers: getAuthHeaders(),
+  });
   const data = await handleResponse<{ data: Empleado[] }>(res);
   return data.data;
 };
 
 export const getEmpleadoPorId = async (id: string): Promise<Empleado> => {
-  const res = await fetch(`${BASE_URL}/empleados/${id}`);
+  const res = await fetch(`${BASE_URL}/empleados/${id}`, {
+    headers: getAuthHeaders(),
+  });
   const data = await handleResponse<{ data: Empleado }>(res);
   return data.data;
 };
@@ -32,7 +48,7 @@ export const crearEmpleado = async (
 ): Promise<Empleado> => {
   const res = await fetch(`${BASE_URL}/empleados`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(),
     body: JSON.stringify(payload),
   });
   const data = await handleResponse<{ data: Empleado }>(res);
@@ -45,7 +61,7 @@ export const editarEmpleado = async (
 ): Promise<Empleado> => {
   const res = await fetch(`${BASE_URL}/empleados/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(),
     body: JSON.stringify(payload),
   });
   const data = await handleResponse<{ data: Empleado }>(res);
@@ -55,6 +71,7 @@ export const editarEmpleado = async (
 export const bajaEmpleado = async (id: string): Promise<Empleado> => {
   const res = await fetch(`${BASE_URL}/empleados/${id}`, {
     method: "DELETE",
+    headers: getAuthHeaders(),
   });
   const data = await handleResponse<{ data: Empleado }>(res);
   return data.data;

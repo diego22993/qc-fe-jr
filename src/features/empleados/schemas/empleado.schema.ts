@@ -46,11 +46,6 @@ export const empleadoSchema = z.object({
     .regex(/[0-9]/, "Debe contener al menos un número"),
 
   // Datos laborales
-  sueldo: z
-    //.number({ invalid_type_error: "El sueldo debe ser un número" })
-    .number({ error: "El sueldo debe ser un número" })
-    .positive("El sueldo debe ser mayor a 0"),
-
   horario: z.string().min(1, "El horario es obligatorio"),
 
   fechaIngreso: z

@@ -1,7 +1,7 @@
 // layouts/MainLayout.tsx
 // SRP: única responsabilidad → estructura visual de la app (sidebar + contenido).
 
-import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import { Outlet, NavLink, useLocation } from "react-router-dom";
 
 interface NavItemProps {
   to: string;
@@ -15,8 +15,8 @@ const NavItem = ({ to, icon, label }: NavItemProps) => (
     className={({ isActive }) =>
       `flex items-center gap-3 px-3 py-2 rounded text-sm transition-colors ${
         isActive
-          ? 'bg-primary-50 text-primary-600 font-medium'
-          : 'text-neutral-600 hover:bg-neutral-50'
+          ? "bg-primary-50 text-primary-600 font-medium"
+          : "text-neutral-600 hover:bg-neutral-50"
       }`
     }
   >
@@ -26,31 +26,30 @@ const NavItem = ({ to, icon, label }: NavItemProps) => (
 );
 
 const pageTitles: Record<string, string> = {
-  '/mascotas':  'Mascotas',
-  '/empleados': 'Empleados',
+  "/empleados": "Empleados",
 };
 
 export const MainLayout = () => {
   const { pathname } = useLocation();
-  const title = pageTitles[pathname] ?? 'Dashboard';
+  const title = pageTitles[pathname] ?? "Dashboard";
 
   return (
     <div className="flex h-screen overflow-hidden bg-neutral-50">
-
       {/* Sidebar */}
       <aside className="w-52 flex-shrink-0 bg-white border-r border-neutral-100 flex flex-col py-5">
         {/* Logo */}
         <div className="px-5 mb-6 flex items-center gap-2">
           <i className="ti ti-paw text-xl text-primary-600" />
-          <span className="text-sm font-medium text-neutral-800">VetClinic</span>
+          <span className="text-sm font-medium text-neutral-800">
+            VetClinic
+          </span>
         </div>
 
         {/* Nav */}
         <nav className="flex-1 px-3 flex flex-col gap-1">
-          <NavItem to="/mascotas"  icon="ti-paw"              label="Mascotas"   />
-          <NavItem to="/empleados" icon="ti-users"            label="Empleados"  />
-          <NavItem to="/turnos"    icon="ti-calendar"         label="Turnos"     />
-          <NavItem to="/reportes"  icon="ti-file-description" label="Reportes"   />
+          <NavItem to="/empleados" icon="ti-users" label="Empleados" />
+          <NavItem to="/turnos" icon="ti-calendar" label="Turnos" />
+          <NavItem to="/reportes" icon="ti-file-description" label="Reportes" />
         </nav>
 
         {/* Usuario */}
@@ -67,7 +66,6 @@ export const MainLayout = () => {
 
       {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden">
-
         {/* Topbar */}
         <header className="h-13 bg-white border-b border-neutral-100 px-6 flex items-center">
           <h1 className="text-sm font-medium text-neutral-800">{title}</h1>
@@ -77,7 +75,6 @@ export const MainLayout = () => {
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
-
       </div>
     </div>
   );

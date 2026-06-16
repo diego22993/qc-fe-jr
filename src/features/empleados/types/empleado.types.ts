@@ -15,7 +15,6 @@ export interface Empleado {
   usuario: string;
   contrasenia: string;
   // Datos laborales
-  sueldo: number;
   horario: string;
   fechaIngreso: string;
   active: boolean;

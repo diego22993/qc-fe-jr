@@ -8,6 +8,5 @@ export interface Empleado {
   fechaIngreso: string;
   usuario: string;
   active: boolean;
-  sueldo: number;
   horario: string;
 }

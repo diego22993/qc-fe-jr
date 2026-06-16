@@ -26,16 +26,6 @@ export const LandingContainer: React.FC<LandingContainerProps> = ({
           Autenticación exitosa. Seleccioná una opción del menú lateral para
           comenzar a trabajar.
         </p>
-
-        <div className="mt-8">
-          <button
-            type="button"
-            className="bg-white hover:bg-teal-50 text-[#0369a1] font-bold py-2.5 px-6 rounded-lg text-sm border border-[#ccfbf1] transition-all cursor-pointer shadow-xs"
-            onClick={() => alert(`¡Lienzo listo, ${username}!`)}
-          >
-            Comenzar a construir ↗
-          </button>
-        </div>
       </div>
     </div>
   );

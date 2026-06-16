@@ -1,11 +1,13 @@
 // features/empleados/components/EmpleadoEditForm.tsx
 // SRP: única responsabilidad → formulario de edición de empleado.
-
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { empleadoSchema, type EmpleadoSchema } from '../schemas/empleado.schema';
-import { useEditarEmpleado } from '../hooks/useEmpleados';
-import type { Empleado } from '../types/empleado.types';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  empleadoSchema,
+  type EmpleadoSchema,
+} from "../schemas/empleado.schema";
+import { useEditarEmpleado } from "../hooks/useEmpleados";
+import type { Empleado } from "../types/empleado.types";
 
 interface Props {
   empleado: Empleado;
@@ -31,48 +33,49 @@ const Field = ({ label, error, required, children }: FieldProps) => (
 );
 
 export const EmpleadoEditForm = ({ empleado, onSuccess, onCancel }: Props) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<EmpleadoSchema>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<EmpleadoSchema>({
     resolver: zodResolver(empleadoSchema),
     defaultValues: {
-      nombre:        empleado.nombre,
-      apellido:      empleado.apellido,
-      email:         empleado.email,
-      telefono:      empleado.telefono,
-      rol:           empleado.rol,
-      usuario:       empleado.usuario,
-      contrasenia:   empleado.contrasenia,
-      sueldo:        empleado.sueldo,
-      horario:       empleado.horario,
-      fechaIngreso:  empleado.fechaIngreso.split('T')[0],
+      nombre: empleado.nombre,
+      apellido: empleado.apellido,
+      email: empleado.email,
+      telefono: empleado.telefono,
+      rol: empleado.rol,
+      usuario: empleado.usuario,
+      contrasenia: empleado.contrasenia,
+      horario: empleado.horario,
+      fechaIngreso: empleado.fechaIngreso.split("T")[0],
     },
   });
 
   const { mutate, isPending, isError, error } = useEditarEmpleado(onSuccess);
 
-  const onSubmit = (data: EmpleadoSchema) =>
-    mutate({ id: empleado.id, data });
+  const onSubmit = (data: EmpleadoSchema) => mutate({ id: empleado.id, data });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-
       {/* Datos personales */}
       <div className="grid grid-cols-2 gap-4">
         <Field label="Nombre" error={errors.nombre?.message} required>
-          <input {...register('nombre')} />
+          <input {...register("nombre")} />
         </Field>
         <Field label="Apellido" error={errors.apellido?.message} required>
-          <input {...register('apellido')} />
+          <input {...register("apellido")} />
         </Field>
         <Field label="Email" error={errors.email?.message} required>
-          <input type="email" {...register('email')} />
+          <input type="email" {...register("email")} />
         </Field>
         <Field label="Teléfono" error={errors.telefono?.message} required>
-          <input {...register('telefono')} />
+          <input {...register("telefono")} />
         </Field>
       </div>
 
       <Field label="Rol" error={errors.rol?.message} required>
-        <select {...register('rol')}>
+        <select {...register("rol")}>
           <option value="Veterinario">Veterinario</option>
           <option value="Recepcionista">Recepcionista</option>
           <option value="Administrativo">Administrativo</option>
@@ -83,25 +86,26 @@ export const EmpleadoEditForm = ({ empleado, onSuccess, onCancel }: Props) => {
       {/* Credenciales */}
       <div className="grid grid-cols-2 gap-4">
         <Field label="Usuario" error={errors.usuario?.message} required>
-          <input {...register('usuario')} />
+          <input {...register("usuario")} />
         </Field>
         <Field label="Contraseña" error={errors.contrasenia?.message} required>
-          <input type="password" {...register('contrasenia')} />
+          <input type="password" {...register("contrasenia")} />
         </Field>
       </div>
 
       {/* Datos laborales */}
       <div className="grid grid-cols-2 gap-4">
-        <Field label="Sueldo ($)" error={errors.sueldo?.message} required>
-          <input type="number" {...register('sueldo', { valueAsNumber: true })} />
-        </Field>
-        <Field label="Fecha de ingreso" error={errors.fechaIngreso?.message} required>
-          <input type="date" {...register('fechaIngreso')} />
+        <Field
+          label="Fecha de ingreso"
+          error={errors.fechaIngreso?.message}
+          required
+        >
+          <input type="date" {...register("fechaIngreso")} />
         </Field>
       </div>
 
       <Field label="Horario" error={errors.horario?.message} required>
-        <input {...register('horario')} />
+        <input {...register("horario")} />
       </Field>
 
       {isError && (
@@ -121,10 +125,9 @@ export const EmpleadoEditForm = ({ empleado, onSuccess, onCancel }: Props) => {
           disabled={isPending}
           className="px-4 py-2 text-sm rounded bg-primary-600 text-white hover:bg-primary-800 transition-colors disabled:opacity-60"
         >
-          {isPending ? 'Guardando...' : 'Guardar cambios'}
+          {isPending ? "Guardando..." : "Guardar cambios"}
         </button>
       </div>
-
     </form>
   );
 };

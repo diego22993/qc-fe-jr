@@ -1,12 +1,14 @@
 // features/empleados/components/EmpleadoTable.tsx
 // SRP: única responsabilidad → renderizar el listado de empleados.
+// Recibe empleados[] como prop — no sabe nada de filtros ni de fetching.
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal } from "../../../components/Modal";
-import { useBajaEmpleado, useEmpleados } from "../hooks/useEmpleados";
-import type { Empleado } from "../types/empleado.types";
-import { EmpleadoEditForm } from "./EmpleadoEditForm";
 import { ModalConfirmacion } from "../../../components/ModalConfirmacion";
+import { EmpleadoEditForm } from "./EmpleadoEditForm";
+import { useBajaEmpleado } from "../hooks/useEmpleados";
+import type { Empleado } from "../types/empleado.types";
 
 const RolBadge = ({ rol }: { rol: string }) => {
   const colores: Record<string, string> = {
@@ -15,7 +17,6 @@ const RolBadge = ({ rol }: { rol: string }) => {
     Administrativo: "bg-neutral-100 text-neutral-600",
     Auxiliar: "bg-success-50 text-success-600",
   };
-
   return (
     <span
       className={`text-xs px-3 py-1 rounded-full font-medium ${colores[rol] ?? "bg-neutral-100 text-neutral-600"}`}
@@ -27,8 +28,7 @@ const RolBadge = ({ rol }: { rol: string }) => {
 
 const EstadoBadge = ({ active }: { active: boolean }) => (
   <span
-    className={`text-xs px-3 py-1 rounded-full font-medium
-    ${active ? "bg-success-50 text-success-600" : "bg-danger-50 text-danger-600"}`}
+    className={`text-xs px-3 py-1 rounded-full font-medium ${active ? "bg-success-50 text-success-600" : "bg-danger-50 text-danger-600"}`}
   >
     {active ? "Activo" : "Inactivo"}
   </span>
@@ -41,7 +41,48 @@ const formatFecha = (fecha: string) =>
     year: "numeric",
   });
 
-const FilaEmpleado = ({ empleado }: { empleado: Empleado }) => (
+interface AccionBtnProps {
+  label: string;
+  icon: string;
+  onClick: () => void;
+  variant?: "default" | "danger";
+}
+
+const AccionBtn = ({
+  label,
+  icon,
+  onClick,
+  variant = "default",
+}: AccionBtnProps) => (
+  <button
+    type="button"
+    title={label}
+    aria-label={label}
+    onClick={onClick}
+    className={`w-8 h-8 flex items-center justify-center rounded transition-colors
+      ${
+        variant === "danger"
+          ? "text-danger-500 hover:bg-danger-50 hover:text-danger-700"
+          : "text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
+      }`}
+  >
+    {icon}
+  </button>
+);
+
+interface FilaEmpleadoProps {
+  empleado: Empleado;
+  onVer: (e: Empleado) => void;
+  onEditar: (e: Empleado) => void;
+  onBaja: (e: Empleado) => void;
+}
+
+const FilaEmpleado = ({
+  empleado,
+  onVer,
+  onEditar,
+  onBaja,
+}: FilaEmpleadoProps) => (
   <tr className="border-t border-neutral-100 hover:bg-neutral-50 transition-colors">
     <td className="px-5 py-3 font-medium text-neutral-800">
       {empleado.nombre} {empleado.apellido}
@@ -54,43 +95,57 @@ const FilaEmpleado = ({ empleado }: { empleado: Empleado }) => (
     <td className="px-4 py-3 text-neutral-600">
       {formatFecha(empleado.fechaIngreso)}
     </td>
-    <td className="px-4 py-3 text-neutral-600">
-      ${empleado.sueldo.toLocaleString("es-AR")}
-    </td>
     <td className="px-4 py-3">
       <EstadoBadge active={empleado.active} />
+    </td>
+    <td className="px-4 py-3">
+      <div className="flex items-center gap-1">
+        <AccionBtn
+          label="Ver detalle"
+          icon="👁️"
+          onClick={() => onVer(empleado)}
+        />
+        <AccionBtn
+          label="Editar"
+          icon="✏️"
+          onClick={() => onEditar(empleado)}
+        />
+        <AccionBtn
+          label="Dar de baja"
+          icon="🗑️"
+          onClick={() => onBaja(empleado)}
+          variant="danger"
+        />
+      </div>
     </td>
   </tr>
 );
 
-export const EmpleadoTable = () => {
-  const { empleados, isLoading, isError } = useEmpleados();
+interface EmpleadoTableProps {
+  empleados: Empleado[];
+  totalOriginal: number;
+}
+
+export const EmpleadoTable = ({
+  empleados,
+  totalOriginal,
+}: EmpleadoTableProps) => {
+  const navigate = useNavigate();
   const [empleadoEditar, setEmpleadoEditar] = useState<Empleado | null>(null);
   const [empleadoBaja, setEmpleadoBaja] = useState<Empleado | null>(null);
 
   const { mutate: darBaja, isPending } = useBajaEmpleado(() =>
     setEmpleadoBaja(null),
   );
-
-  if (isLoading)
-    return (
-      <div className="flex items-center justify-center py-16 text-neutral-400 text-sm">
-        Cargando empleados...
-      </div>
-    );
-
-  if (isError)
-    return (
-      <div className="flex items-center justify-center py-16 text-danger-600 text-sm">
-        Error al cargar los empleados. Verificá que el servidor esté corriendo.
-      </div>
-    );
+  const hayFiltroActivo = empleados.length !== totalOriginal;
 
   if (empleados.length === 0)
     return (
-      <div className="flex items-center justify-center py-16">
+      <div className="bg-white border border-neutral-100 rounded-lg flex items-center justify-center py-16">
         <p className="text-neutral-400 text-sm">
-          No hay empleados registrados todavía.
+          {hayFiltroActivo
+            ? "No hay empleados que coincidan con los filtros aplicados."
+            : "No hay empleados registrados todavía."}
         </p>
       </div>
     );
@@ -103,8 +158,9 @@ export const EmpleadoTable = () => {
             Empleados registrados
           </h2>
           <span className="text-xs bg-neutral-50 border border-neutral-100 px-3 py-1 rounded-full text-neutral-600">
-            {empleados.length}{" "}
-            {empleados.length === 1 ? "registro" : "registros"}
+            {hayFiltroActivo
+              ? `${empleados.length} de ${totalOriginal} registros`
+              : `${totalOriginal} ${totalOriginal === 1 ? "registro" : "registros"}`}
           </span>
         </div>
         <div className="overflow-x-auto">
@@ -127,12 +183,11 @@ export const EmpleadoTable = () => {
                   Ingreso
                 </th>
                 <th className="text-left px-4 py-3 font-medium text-neutral-600">
-                  Sueldo
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-neutral-600">
                   Estado
                 </th>
-                <th className="px-4 py-3" />
+                <th className="text-left px-4 py-3 font-medium text-neutral-600">
+                  Acción
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -140,8 +195,9 @@ export const EmpleadoTable = () => {
                 <FilaEmpleado
                   key={emp.id}
                   empleado={emp}
-                  //onEditar={setEmpleadoEditar}
-                  //onBaja={setEmpleadoBaja}
+                  onVer={(e) => navigate(`/empleados/${e.id}`)}
+                  onEditar={(e) => setEmpleadoEditar(e)}
+                  onBaja={(e) => setEmpleadoBaja(e)}
                 />
               ))}
             </tbody>
@@ -149,7 +205,6 @@ export const EmpleadoTable = () => {
         </div>
       </div>
 
-      {/* Modal Edición */}
       {empleadoEditar && (
         <Modal
           titulo={`Editar — ${empleadoEditar.nombre} ${empleadoEditar.apellido}`}
@@ -163,7 +218,6 @@ export const EmpleadoTable = () => {
         </Modal>
       )}
 
-      {/* Modal Baja */}
       {empleadoBaja && (
         <ModalConfirmacion
           titulo="Dar de baja empleado"

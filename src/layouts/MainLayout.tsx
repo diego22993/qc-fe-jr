@@ -52,6 +52,7 @@ export const MainLayout = () => {
         <nav className="flex-1 px-3 flex flex-col gap-1">
           <NavItem to="/empleados" icon="ti-users" label="Empleados" />
           <NavItem to="/turnos" icon="ti-calendar" label="Turnos" />
+          <NavItem to="/roles" icon="ti-users" label="Roles" />
           <NavItem to="/reportes" icon="ti-file-description" label="Reportes" />
         </nav>
 
