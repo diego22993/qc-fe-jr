@@ -140,8 +140,8 @@ export const EmpleadoTable = () => {
                 <FilaEmpleado
                   key={emp.id}
                   empleado={emp}
-                  onEditar={setEmpleadoEditar}
-                  onBaja={setEmpleadoBaja}
+                  //onEditar={setEmpleadoEditar}
+                  //onBaja={setEmpleadoBaja}
                 />
               ))}
             </tbody>

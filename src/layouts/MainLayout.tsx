@@ -44,14 +44,12 @@ export const MainLayout = () => {
       {/* Sidebar */}
       <aside className="w-52 flex-shrink-0 bg-white border-r border-neutral-100 flex flex-col py-5">
         <div className="px-5 mb-6 flex items-center gap-2">
-          <i className="ti ti-paw text-xl text-primary-600" />
           <span className="text-sm font-medium text-neutral-800">
-            VetClinic
+            <b>JIUMAN</b>
           </span>
         </div>
 
         <nav className="flex-1 px-3 flex flex-col gap-1">
-          <NavItem to="/mascotas" icon="ti-paw" label="Mascotas" />
           <NavItem to="/empleados" icon="ti-users" label="Empleados" />
           <NavItem to="/turnos" icon="ti-calendar" label="Turnos" />
           <NavItem to="/reportes" icon="ti-file-description" label="Reportes" />

@@ -12,5 +12,6 @@ export const LandingPage: React.FC = () => {
     ? `${empleado.nombre} ${empleado.apellido}`
     : "Usuario";
 
+  //return `It works! ${nombre}`; 
   return <LandingContainer username={nombre} />;
 };
