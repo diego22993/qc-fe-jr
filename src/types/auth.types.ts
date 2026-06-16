@@ -1,16 +1,10 @@
-export interface Empleado {
-  id: string;
-  nombre: string;
-  apellido: string;
-  email: string;
-  telefono: string;
-  rol: string;
-  fechaIngreso: string;
-  usuario: string;
-  active: boolean;
-}
+// types/auth.types.ts
+import type { Empleado } from "../features/empleados/types/empleado.types";
+
+// Re-exporta para que el resto del módulo auth lo use desde acá
+export type { Empleado };
 
 export interface LoginResponseData {
-  empleado: Empleado;
+  empleado: Omit<Empleado, "contrasenia">;
   token: string;
 }
