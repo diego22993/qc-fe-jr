@@ -1,11 +1,9 @@
 // features/empleados/components/EmpleadoEditForm.tsx
 // SRP: única responsabilidad → formulario de edición de empleado.
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  empleadoSchema,
-  type EmpleadoSchema,
-} from "../schemas/empleado.schema";
+import { empleadoSchema, type EmpleadoSchema } from "../schemas/empleado.schema";
 import { useEditarEmpleado } from "../hooks/useEmpleados";
 import type { Empleado } from "../types/empleado.types";
 
@@ -40,14 +38,15 @@ export const EmpleadoEditForm = ({ empleado, onSuccess, onCancel }: Props) => {
   } = useForm<EmpleadoSchema>({
     resolver: zodResolver(empleadoSchema),
     defaultValues: {
-      nombre: empleado.nombre,
-      apellido: empleado.apellido,
-      email: empleado.email,
-      telefono: empleado.telefono,
-      rol: empleado.rol,
-      usuario: empleado.usuario,
+      nombre:      empleado.nombre,
+      apellido:    empleado.apellido,
+      email:       empleado.email,
+      telefono:    empleado.telefono,
+      rol:         empleado.rol,
+      usuario:     empleado.usuario,
       contrasenia: empleado.contrasenia,
-      horario: empleado.horario,
+      sueldo:      empleado.sueldo,
+      horario:     empleado.horario ?? "",
       fechaIngreso: empleado.fechaIngreso.split("T")[0],
     },
   });
@@ -58,6 +57,7 @@ export const EmpleadoEditForm = ({ empleado, onSuccess, onCancel }: Props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+
       {/* Datos personales */}
       <div className="grid grid-cols-2 gap-4">
         <Field label="Nombre" error={errors.nombre?.message} required>
@@ -74,8 +74,10 @@ export const EmpleadoEditForm = ({ empleado, onSuccess, onCancel }: Props) => {
         </Field>
       </div>
 
+      {/* Rol — incluye todos los roles posibles */}
       <Field label="Rol" error={errors.rol?.message} required>
         <select {...register("rol")}>
+          <option value="Admin">Admin</option>
           <option value="Veterinario">Veterinario</option>
           <option value="Recepcionista">Recepcionista</option>
           <option value="Administrativo">Administrativo</option>
@@ -95,16 +97,18 @@ export const EmpleadoEditForm = ({ empleado, onSuccess, onCancel }: Props) => {
 
       {/* Datos laborales */}
       <div className="grid grid-cols-2 gap-4">
-        <Field
-          label="Fecha de ingreso"
-          error={errors.fechaIngreso?.message}
-          required
-        >
+        <Field label="Sueldo ($)" error={errors.sueldo?.message}>
+          <input
+            type="number"
+            {...register("sueldo", { valueAsNumber: true })}
+          />
+        </Field>
+        <Field label="Fecha de ingreso" error={errors.fechaIngreso?.message} required>
           <input type="date" {...register("fechaIngreso")} />
         </Field>
       </div>
 
-      <Field label="Horario" error={errors.horario?.message} required>
+      <Field label="Horario" error={errors.horario?.message}>
         <input {...register("horario")} />
       </Field>
 
@@ -128,6 +132,7 @@ export const EmpleadoEditForm = ({ empleado, onSuccess, onCancel }: Props) => {
           {isPending ? "Guardando..." : "Guardar cambios"}
         </button>
       </div>
+
     </form>
   );
 };

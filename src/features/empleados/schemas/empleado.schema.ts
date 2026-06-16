@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+// Roles válidos — debe coincidir con RolEmpleado en empleado.types.ts
+const ROLES = [
+  "Admin",
+  "QC",
+  "Recepcionista",
+  "Desarrollador",
+  "Soporte",
+] as const;
+
 export const empleadoSchema = z.object({
   // Datos básicos
   nombre: z
@@ -17,20 +26,11 @@ export const empleadoSchema = z.object({
     .min(1, "El email es obligatorio")
     .email("Debe ser un email válido"),
 
-  telefono: z
-    .string()
-    .min(8, "El teléfono debe tener al menos 8 dígitos")
-    .regex(/^\d+$/, "Solo se permiten números"),
+  telefono: z.string().min(8, "El teléfono debe tener al menos 8 dígitos"),
 
-  /*rol: z.enum(['Veterinario', 'Recepcionista', 'Administrativo', 'Auxiliar'] as const, {
-    errorMap: () => ({ message: 'Seleccioná un rol válido' }),
-  }),*/
-  rol: z.enum(
-    ["Veterinario", "Recepcionista", "Administrativo", "Auxiliar"] as const,
-    {
-      error: "Seleccioná un rol válido",
-    },
-  ),
+  rol: z.enum(ROLES, {
+    error: "Seleccioná un rol válido",
+  }),
 
   // Credenciales
   usuario: z
@@ -46,7 +46,12 @@ export const empleadoSchema = z.object({
     .regex(/[0-9]/, "Debe contener al menos un número"),
 
   // Datos laborales
-  horario: z.string().min(1, "El horario es obligatorio"),
+  sueldo: z
+    .number({ error: "El sueldo debe ser un número" })
+    .positive("El sueldo debe ser mayor a 0")
+    .optional(),
+
+  horario: z.string().optional(),
 
   fechaIngreso: z
     .string()
