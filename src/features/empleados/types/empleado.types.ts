@@ -1,7 +1,7 @@
 // features/empleados/types/empleado.types.ts
 // ISP: interfaces pequeñas y específicas para cada uso.
 
-export type RolEmpleado = 'Veterinario' | 'Recepcionista' | 'Administrativo' | 'Auxiliar';
+export type RolEmpleado = 'Recepcionista' | 'Admin' | 'QC' | 'Desarrollador';
 
 export interface Empleado {
   id: string;

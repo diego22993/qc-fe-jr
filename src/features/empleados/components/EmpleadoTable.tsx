@@ -1,6 +1,5 @@
 // features/empleados/components/EmpleadoTable.tsx
 // SRP: única responsabilidad → renderizar el listado de empleados.
-// Recibe empleados[] como prop — no sabe nada de filtros ni de fetching.
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +7,10 @@ import { Modal } from "../../../components/Modal";
 import { ModalConfirmacion } from "../../../components/ModalConfirmacion";
 import { EmpleadoEditForm } from "./EmpleadoEditForm";
 import { useBajaEmpleado } from "../hooks/useEmpleados";
+import { usePermisos } from "../../auth/hooks/usePermisos";
 import type { Empleado } from "../types/empleado.types";
+
+// ─── Badges ──────────────────────────────────────────────────────────────────
 
 const RolBadge = ({ rol }: { rol: string }) => {
   const colores: Record<string, string> = {
@@ -41,6 +43,8 @@ const formatFecha = (fecha: string) =>
     year: "numeric",
   });
 
+// ─── Botón de acción ─────────────────────────────────────────────────────────
+
 interface AccionBtnProps {
   label: string;
   icon: string;
@@ -70,11 +74,15 @@ const AccionBtn = ({
   </button>
 );
 
+// ─── Fila ────────────────────────────────────────────────────────────────────
+
 interface FilaEmpleadoProps {
   empleado: Empleado;
   onVer: (e: Empleado) => void;
   onEditar: (e: Empleado) => void;
   onBaja: (e: Empleado) => void;
+  puedeEditar: boolean;
+  puedeBorrar: boolean;
 }
 
 const FilaEmpleado = ({
@@ -82,6 +90,8 @@ const FilaEmpleado = ({
   onVer,
   onEditar,
   onBaja,
+  puedeEditar,
+  puedeBorrar,
 }: FilaEmpleadoProps) => (
   <tr className="border-t border-neutral-100 hover:bg-neutral-50 transition-colors">
     <td className="px-5 py-3 font-medium text-neutral-800">
@@ -98,39 +108,60 @@ const FilaEmpleado = ({
     <td className="px-4 py-3">
       <EstadoBadge active={empleado.active} />
     </td>
+
+    {/* ── Columna Acción ── */}
     <td className="px-4 py-3">
       <div className="flex items-center gap-1">
+        {/* Ver — disponible para todos los roles */}
         <AccionBtn
           label="Ver detalle"
           icon="👁️"
           onClick={() => onVer(empleado)}
         />
-        <AccionBtn
-          label="Editar"
-          icon="✏️"
-          onClick={() => onEditar(empleado)}
-        />
-        <AccionBtn
-          label="Dar de baja"
-          icon="🗑️"
-          onClick={() => onBaja(empleado)}
-          variant="danger"
-        />
+
+        {/* Editar — solo Admin */}
+        {puedeEditar ? (
+          <AccionBtn
+            label="Editar"
+            icon="✏️"
+            onClick={() => onEditar(empleado)}
+          />
+        ) : (
+          <span className="w-8 h-8" aria-hidden="true" />
+        )}
+
+        {/* Dar de baja — solo Admin */}
+        {puedeBorrar ? (
+          <AccionBtn
+            label="Dar de baja"
+            icon="🗑️"
+            onClick={() => onBaja(empleado)}
+            variant="danger"
+          />
+        ) : (
+          <span className="w-8 h-8" aria-hidden="true" />
+        )}
       </div>
     </td>
   </tr>
 );
+
+// ─── Props tabla ─────────────────────────────────────────────────────────────
 
 interface EmpleadoTableProps {
   empleados: Empleado[];
   totalOriginal: number;
 }
 
+// ─── Tabla principal ─────────────────────────────────────────────────────────
+
 export const EmpleadoTable = ({
   empleados,
   totalOriginal,
 }: EmpleadoTableProps) => {
   const navigate = useNavigate();
+  const { puedeEditar, puedeBorrar } = usePermisos();
+
   const [empleadoEditar, setEmpleadoEditar] = useState<Empleado | null>(null);
   const [empleadoBaja, setEmpleadoBaja] = useState<Empleado | null>(null);
 
@@ -163,6 +194,7 @@ export const EmpleadoTable = ({
               : `${totalOriginal} ${totalOriginal === 1 ? "registro" : "registros"}`}
           </span>
         </div>
+
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead>
@@ -198,6 +230,8 @@ export const EmpleadoTable = ({
                   onVer={(e) => navigate(`/empleados/${e.id}`)}
                   onEditar={(e) => setEmpleadoEditar(e)}
                   onBaja={(e) => setEmpleadoBaja(e)}
+                  puedeEditar={puedeEditar}
+                  puedeBorrar={puedeBorrar}
                 />
               ))}
             </tbody>
