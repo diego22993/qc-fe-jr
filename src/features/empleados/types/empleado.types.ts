@@ -2,11 +2,11 @@
 // ISP: interfaces pequeñas y específicas para cada uso.
 
 export type RolEmpleado =
-  | 'Admin'
-  | 'QC'
-  | 'Recepcionista'
-  | 'Desarrollador'
-  | 'Soporte';
+  | "Admin"
+  | "QC"
+  | "Recepcionista"
+  | "Desarrollador"
+  | "Soporte";
 
 export interface Empleado {
   id: string;
@@ -24,4 +24,4 @@ export interface Empleado {
 }
 
 // Para el formulario — sin id ni active (los genera el backend)
-export type EmpleadoFormData = Omit<Empleado, 'id' | 'active'>;
+export type EmpleadoFormData = Omit<Empleado, "id" | "active">;
