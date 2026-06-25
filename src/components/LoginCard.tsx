@@ -46,7 +46,6 @@ export const LoginCard: React.FC = () => {
           <InputField
             id="usuario"
             label="Usuario"
-            icon="👤"
             type="text"
             placeholder="Ingrese su usuario"
             value={usuario}
@@ -59,7 +58,6 @@ export const LoginCard: React.FC = () => {
           <InputField
             id="contrasenia"
             label="Contraseña"
-            icon="🔒"
             type={mostrarPassword ? "text" : "password"}
             placeholder="Ingrese su contraseña"
             value={contrasenia}
