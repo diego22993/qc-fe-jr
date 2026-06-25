@@ -32,7 +32,7 @@ export const LoginCard: React.FC = () => {
           <span className="text-[#14b8a6] font-light">SISTEMA</span> RRHH
         </h1>
         <p className="text-[#115e59] text-sm mt-1.5 font-medium">
-          Ingresá con tus credenciales
+          Ingresá con tus credenciales.
         </p>
       </header>
 
