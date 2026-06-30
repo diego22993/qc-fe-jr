@@ -112,7 +112,6 @@ export const NuevoEmpleadoForm: React.FC<NuevoEmpleadoFormProps> = ({
   };
 
   return (
-    // 🟢 noValidate desactiva por completo los globos flotantes nativos del navegador ("Completa este campo")
     <form
       onSubmit={handleSubmit}
       noValidate
@@ -237,16 +236,24 @@ export const NuevoEmpleadoForm: React.FC<NuevoEmpleadoFormProps> = ({
           type="button"
           onClick={onCancelar}
           disabled={isPending}
-          className="px-4 py-2 text-sm font-medium text-neutral-600 bg-white border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors disabled:opacity-50"
+          className="px-4 py-2 text-sm font-medium text-neutral-600 bg-white border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isPending}
-          className="px-4 py-2 text-sm font-medium text-white bg-[#0d9488] rounded-lg hover:bg-[#0f766e] transition-colors disabled:opacity-50"
+          className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#0d9488] rounded-lg hover:bg-[#0f766e] transition-colors disabled:opacity-70 disabled:cursor-not-allowed minimum-w-[80px]"
         >
-          {isPending ? "Guardando..." : "Aceptar"}
+          {isPending ? (
+            <>
+              {/* Spinner animado opcional (usando tus clases de Tabler Icons u otra disponible) */}
+              <i className="ti ti-loader animate-spin text-base" />
+              Guardando...
+            </>
+          ) : (
+            "Aceptar"
+          )}
         </button>
       </div>
     </form>

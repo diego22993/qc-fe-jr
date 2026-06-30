@@ -10,8 +10,6 @@ import { useBajaEmpleado } from "../hooks/useEmpleados";
 import { usePermisos } from "../../auth/hooks/usePermisos";
 import type { Empleado } from "../types/empleado.types";
 
-// ─── Badges ──────────────────────────────────────────────────────────────────
-
 const RolBadge = ({ rol }: { rol: string }) => {
   const colores: Record<string, string> = {
     Veterinario: "bg-primary-50 text-primary-600",
@@ -43,8 +41,6 @@ const formatFecha = (fecha: string) =>
     year: "numeric",
   });
 
-// ─── Botón de acción ─────────────────────────────────────────────────────────
-
 interface AccionBtnProps {
   label: string;
   icon: string;
@@ -73,8 +69,6 @@ const AccionBtn = ({
     {icon}
   </button>
 );
-
-// ─── Fila ────────────────────────────────────────────────────────────────────
 
 interface FilaEmpleadoProps {
   empleado: Empleado;
@@ -146,14 +140,10 @@ const FilaEmpleado = ({
   </tr>
 );
 
-// ─── Props tabla ─────────────────────────────────────────────────────────────
-
 interface EmpleadoTableProps {
   empleados: Empleado[];
   totalOriginal: number;
 }
-
-// ─── Tabla principal ─────────────────────────────────────────────────────────
 
 export const EmpleadoTable = ({
   empleados,

@@ -1,4 +1,4 @@
-// api/empleados.api.ts
+// empleados.api.ts
 // DIP: abstracción de todas las llamadas HTTP de empleados.
 
 import type {
@@ -6,7 +6,7 @@ import type {
   EmpleadoFormData,
 } from "../features/empleados/types/empleado.types";
 
-const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000/api";
+const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001";
 
 // Lee el token del localStorage (misma key que auth.store.ts)
 const getAuthHeaders = (): HeadersInit => {
@@ -46,7 +46,7 @@ export const getEmpleadoPorId = async (id: string): Promise<Empleado> => {
 export const crearEmpleado = async (
   payload: EmpleadoFormData,
 ): Promise<Empleado> => {
-  const res = await fetch(`${BASE_URL}/empleados`, {
+  const res = await fetch(`${BASE_URL}/empleados/nuevo`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(payload),

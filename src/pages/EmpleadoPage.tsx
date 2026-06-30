@@ -8,8 +8,6 @@ import { useEmpleadoFiltros } from "../features/empleados/hooks/useEmpleadoFiltr
 
 export const EmpleadoPage: React.FC = () => {
   const navigate = useNavigate();
-
-  // 🟢 React Query puro: no tira error de typings porque no desestructuramos lo que no existe
   const { empleados, isLoading, isError } = useEmpleados();
 
   const {
@@ -40,7 +38,6 @@ export const EmpleadoPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-4 relative">
-      {/* Cabecera alineada con el botón arriba a la derecha */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-base font-medium text-neutral-800">Empleados</h1>
@@ -49,6 +46,7 @@ export const EmpleadoPage: React.FC = () => {
           </p>
         </div>
 
+        {/* 🟢 CORREGIDO: Navega por el árbol de rutas del Front-end sin tocar "/api" */}
         <button
           onClick={() => navigate("/empleados/nuevo")}
           className="flex items-center gap-2 bg-[#0d9488] hover:bg-[#0f766e] text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-xs active:scale-95"
@@ -73,7 +71,7 @@ export const EmpleadoPage: React.FC = () => {
         totalOriginal={totalOriginal}
       />
 
-      {/* El Outlet ya no necesita enviar ningún context complejo */}
+      {/* Aquí es donde React Router inyectará mágicamente el Modal cuando la URL sea /empleados/nuevo */}
       <Outlet />
     </div>
   );
