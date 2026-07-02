@@ -25,3 +25,10 @@ export interface Empleado {
 
 // Para el formulario — sin id ni active (los genera el backend)
 export type EmpleadoFormData = Omit<Empleado, "id" | "active">;
+
+// Para la edición desde el FE — el backend también acepta "active",
+// pero el formulario de edición no lo expone (uso exclusivo backend).
+export type EmpleadoEditData = Pick<
+  Empleado,
+  "nombre" | "apellido" | "telefono" | "email" | "active"
+>;

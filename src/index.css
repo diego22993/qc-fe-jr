@@ -1,8 +1,30 @@
+/* src/index.css */
 @import "tailwindcss";
+
+@theme {
+  /* 1. Variables base del proyecto */
+  --color-bg-secondary: #f9f9f9;
+  --color-border-primary: #dadce0;
+  --color-text-main: #202124;
+  --color-text-muted: #5f6368;
+
+  /* 2. Paleta Verde Pastel (Para Guardar / Crear / Éxito) */
+  --color-brand-green: #e6f4ea;
+  --color-brand-green-hover: #d2ebd9;
+  --color-brand-green-text: #137333;
+
+  /* 3. Paleta Rojo Pastel (Para Dar de Baja / Eliminar / Erreores) */
+  --color-brand-red: #fce8e6; /* Fondo rojo pastel suave */
+  --color-brand-red-hover: #fad2cf; /* Hover del rojo pastel */
+  --color-brand-red-text: #c5221f; /* Texto rojo oscuro (Accesible y legible) */
+}
 
 @layer base {
   input[type="date"],
   input[type="tel"],
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
   select,
   textarea {
     background: var(--color-bg-secondary);
@@ -13,5 +35,14 @@
     font-size: 13px;
     outline: none;
     box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  /* El foco de los inputs cambia a Verde para denotar un estado correcto de edición */
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--color-brand-green-text);
+    box-shadow: 0 0 0 2px var(--color-brand-green);
   }
 }

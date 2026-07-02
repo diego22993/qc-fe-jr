@@ -2,8 +2,17 @@
 // DIP: depende de empleados.api.ts, no de fetch directamente.
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { bajaEmpleado, crearEmpleado, editarEmpleado, getEmpleadoPorId, getEmpleados } from "../../../api/empleado.api";
-import type { EmpleadoFormData } from "../types/empleado.types";
+import {
+  bajaEmpleado,
+  crearEmpleado,
+  editarEmpleado,
+  getEmpleadoPorId,
+  getEmpleados,
+} from "../../../api/empleado.api";
+import type {
+  EmpleadoFormData,
+  EmpleadoEditData,
+} from "../types/empleado.types";
 
 const QUERY_KEY = ["empleados"] as const;
 
@@ -52,7 +61,7 @@ export const useEditarEmpleado = (onSuccess?: () => void) => {
       data,
     }: {
       id: string;
-      data: Partial<EmpleadoFormData>;
+      data: Partial<EmpleadoEditData>;
     }) => editarEmpleado(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEY });

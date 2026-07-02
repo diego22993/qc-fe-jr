@@ -46,6 +46,7 @@ interface AccionBtnProps {
   icon: string;
   onClick: () => void;
   variant?: "default" | "danger";
+  disabled?: boolean;
 }
 
 const AccionBtn = ({
@@ -53,17 +54,22 @@ const AccionBtn = ({
   icon,
   onClick,
   variant = "default",
+  disabled = false,
 }: AccionBtnProps) => (
   <button
     type="button"
     title={label}
     aria-label={label}
+    aria-disabled={disabled}
+    disabled={disabled}
     onClick={onClick}
     className={`w-8 h-8 flex items-center justify-center rounded transition-colors
       ${
-        variant === "danger"
-          ? "text-danger-500 hover:bg-danger-50 hover:text-danger-700"
-          : "text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
+        disabled
+          ? "text-neutral-300 cursor-not-allowed"
+          : variant === "danger"
+            ? "text-danger-500 hover:bg-danger-50 hover:text-danger-700"
+            : "text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
       }`}
   >
     {icon}
@@ -113,24 +119,34 @@ const FilaEmpleado = ({
           onClick={() => onVer(empleado)}
         />
 
-        {/* Editar — solo Admin */}
+        {/* Editar — solo Admin, y sólo si el empleado está activo */}
         {puedeEditar ? (
           <AccionBtn
-            label="Editar"
+            label={
+              empleado.active
+                ? "Editar"
+                : "No se puede editar un empleado dado de baja"
+            }
             icon="✏️"
             onClick={() => onEditar(empleado)}
+            disabled={!empleado.active}
           />
         ) : (
           <span className="w-8 h-8" aria-hidden="true" />
         )}
 
-        {/* Dar de baja — solo Admin */}
+        {/* Dar de baja — solo Admin, y sólo si el empleado está activo */}
         {puedeBorrar ? (
           <AccionBtn
-            label="Dar de baja"
+            label={
+              empleado.active
+                ? "Dar de baja"
+                : "El empleado ya está dado de baja"
+            }
             icon="🗑️"
             onClick={() => onBaja(empleado)}
             variant="danger"
+            disabled={!empleado.active}
           />
         ) : (
           <span className="w-8 h-8" aria-hidden="true" />

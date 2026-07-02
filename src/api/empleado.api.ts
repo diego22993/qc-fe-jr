@@ -4,6 +4,7 @@
 import type {
   Empleado,
   EmpleadoFormData,
+  EmpleadoEditData,
 } from "../features/empleados/types/empleado.types";
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001";
@@ -57,7 +58,7 @@ export const crearEmpleado = async (
 
 export const editarEmpleado = async (
   id: string,
-  payload: Partial<EmpleadoFormData>,
+  payload: Partial<EmpleadoEditData>,
 ): Promise<Empleado> => {
   const res = await fetch(`${BASE_URL}/empleados/${id}`, {
     method: "PATCH",
